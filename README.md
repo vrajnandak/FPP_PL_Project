@@ -11,3 +11,4 @@ opam install domainslib
 
 ocamlfind ocamlopt -package domainslib -linkpkg -o parallel_sum parallel_sum.ml
 ./parallel_sum
+g++ -fopenmp -O3 sum_parallel.cpp -o sum_parallel
