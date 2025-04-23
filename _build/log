@@ -1,0 +1,17 @@
+# dune build problems/mandelbrot_set/ocaml/mandelbrot.exe
+# OCAMLPARAM: unset
+# Shared cache: enabled-except-user-rules
+# Shared cache location: /Users/sanchitkumardogra/.cache/dune/db
+# Workspace root: "/Users/sanchitkumardogra/kaam/clg/SEM
+# 6/pl/PROJECT/FPP_PL_Project"
+# Auto-detected concurrency: 8
+# Dune context:
+#  { name = "default"
+#  ; kind = "default"
+#  ; profile = Dev
+#  ; merlin = true
+#  ; fdo_target_exe = None
+#  ; build_dir = In_build_dir "default"
+#  ; instrument_with = []
+#  }
+$ /Users/sanchitkumardogra/.opam/5.0.0/bin/ocamlc.opt -config > /var/folders/2g/gr_ml0vx0dq1mf1473z5bsdc0000gn/T/dune_4750e0_output
