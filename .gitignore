@@ -1,0 +1,59 @@
+# === OCaml build artifacts ===
+_build/
+*.exe
+*.cm*
+*.o
+*.a
+*.annot
+*.cmt*
+*.cmi
+*.mli
+*.dSYM/
+
+# Dune/OPAM files
+*.install
+.dune
+.dune.lock
+.merlin
+.merlin-conf
+.log
+.db
+.digest-db
+.filesystem-clock
+.lock
+
+# === Python cache ===
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+*.egg
+
+# === C++ artifacts ===
+*.out
+*.o
+*.obj
+*.so
+*.a
+*.exe
+
+# === Benchmark/Results ===
+/results/*
+!results/.gitkeep
+
+# === System/Editor files ===
+.DS_Store
+*.swp
+*.swo
+*.bak
+*.tmp
+*.orig
+*.old
+*~
+.idea/
+.vscode/
+
+# === Others ===
+*.csv
+*.md
