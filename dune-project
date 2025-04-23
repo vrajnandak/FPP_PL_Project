@@ -2,3 +2,5 @@
 ; (using ocamllex 0.1)
 ; (using ocamlyacc 0.1)
 (using menhir 2.0)
+(using domainslib 0.5)
+(using eio_main 0.12)
