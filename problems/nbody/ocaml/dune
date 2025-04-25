@@ -1,4 +1,0 @@
-(executable
- (name nbody)
- (modules nbody)
- (libraries domainslib eio_main))
