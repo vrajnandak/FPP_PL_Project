@@ -1,0 +1,4 @@
+(executable
+ (name matrix_chain)
+ (modes byte native)
+ (libraries lwt.unix unix))

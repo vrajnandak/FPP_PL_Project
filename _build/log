@@ -1,4 +1,4 @@
-# dune build nbody.exe
+# dune build problems/matrixChain/ocaml/matrix_chain.exe
 # OCAMLPARAM: unset
 # Shared cache: enabled-except-user-rules
 # Shared cache location: /Users/sanchitkumardogra/.cache/dune/db
@@ -14,10 +14,6 @@
 #  ; build_dir = In_build_dir "default"
 #  ; instrument_with = []
 #  }
-$ /Users/sanchitkumardogra/.opam/5.0.0/bin/ocamlc.opt -config > /var/folders/2g/gr_ml0vx0dq1mf1473z5bsdc0000gn/T/dune_85337a_output
-$ (cd _build/default && /Users/sanchitkumardogra/.opam/5.0.0/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -I problems/nbody/ocaml/.nbody.eobjs/byte -I problems/nbody/ocaml/.nbody.eobjs/native -I /Users/sanchitkumardogra/.opam/5.0.0/lib/ocaml/threads -I /Users/sanchitkumardogra/.opam/5.0.0/lib/ocaml/unix -I /Users/sanchitkumardogra/.opam/5.0.0/lib/spawn -intf-suffix .ml -no-alias-deps -opaque -o problems/nbody/ocaml/.nbody.eobjs/native/dune__exe__Nbody.cmx -c -impl problems/nbody/ocaml/nbody.ml)
-> File "problems/nbody/ocaml/nbody.ml", line 21, characters 35-48:
-> 21 | let body_actor (self : (msg, unit) Spawn.Actor.t) (body : body) =
->                                         ^^^^^^^^^^^^^
-> Error: Unbound module Spawn.Actor
-[2]
+$ /Users/sanchitkumardogra/.opam/5.0.0/bin/ocamlc.opt -config > /var/folders/2g/gr_ml0vx0dq1mf1473z5bsdc0000gn/T/dune_3af211_output
+$ (cd _build/default && /Users/sanchitkumardogra/.opam/5.0.0/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -I problems/matrixChain/ocaml/.matrix_chain.eobjs/byte -I problems/matrixChain/ocaml/.matrix_chain.eobjs/native -I /Users/sanchitkumardogra/.opam/5.0.0/lib/bytes -I /Users/sanchitkumardogra/.opam/5.0.0/lib/lwt -I /Users/sanchitkumardogra/.opam/5.0.0/lib/lwt/unix -I /Users/sanchitkumardogra/.opam/5.0.0/lib/ocaml/threads -I /Users/sanchitkumardogra/.opam/5.0.0/lib/ocaml/unix -I /Users/sanchitkumardogra/.opam/5.0.0/lib/ocplib-endian -I /Users/sanchitkumardogra/.opam/5.0.0/lib/ocplib-endian/bigstring -intf-suffix .ml -no-alias-deps -opaque -o problems/matrixChain/ocaml/.matrix_chain.eobjs/native/dune__exe__Matrix_chain.cmx -c -impl problems/matrixChain/ocaml/matrix_chain.ml)
+$ (cd _build/default && /Users/sanchitkumardogra/.opam/5.0.0/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -o problems/matrixChain/ocaml/matrix_chain.exe /Users/sanchitkumardogra/.opam/5.0.0/lib/lwt/lwt.cmxa /Users/sanchitkumardogra/.opam/5.0.0/lib/ocplib-endian/ocplib_endian.cmxa /Users/sanchitkumardogra/.opam/5.0.0/lib/ocplib-endian/bigstring/ocplib_endian_bigstring.cmxa /Users/sanchitkumardogra/.opam/5.0.0/lib/ocaml/unix/unix.cmxa /Users/sanchitkumardogra/.opam/5.0.0/lib/ocaml/threads/threads.cmxa /Users/sanchitkumardogra/.opam/5.0.0/lib/lwt/unix/lwt_unix.cmxa -I /Users/sanchitkumardogra/.opam/5.0.0/lib/lwt/unix problems/matrixChain/ocaml/.matrix_chain.eobjs/native/dune__exe__Matrix_chain.cmx)
