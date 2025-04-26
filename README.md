@@ -32,3 +32,8 @@ dune clean dune build
 dune build problems/matrixChain/ocaml/matrix_chain.exe
 g++ -O3 problems/matrixChain/cpp/matrix_chain.cpp -o problems/matrixChain/cpp/matrix_chain_cpp
 hyperfine --warmup 3 --min-runs 20 './_build/default/problems/matrixChain/ocaml/matrix_chain.exe' './problems/matrixChain/cpp/matrix_chain_cpp'
+
+
+
+# MandelBrot parallelised for cpp
+hyperfine --warmup 3 --min-runs 20 './_build/default/problems/mandelbrot_set/ocaml/mandelbrot.exe' './problems/mandelbrot_set/cpp/mandelbrot_cpp'

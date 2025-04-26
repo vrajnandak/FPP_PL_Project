@@ -1,9 +1,9 @@
 open Domainslib
 
-let width = 800
-let height = 600
-let zoom = 300.0
-let max_iter = 1000
+let width = 100
+let height = 3600
+let zoom = 600.0
+let max_iter = 2000
 
 (* Higher-order function: takes a pixel coordinate -> returns iterations *)
 let mandelbrot_iter x y =
