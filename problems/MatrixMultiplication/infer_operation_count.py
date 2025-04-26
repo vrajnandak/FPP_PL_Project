@@ -1,0 +1,36 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+
+#The runtime data obtained is used in order to see how the runtimes change with matrix sizes. For this, we consider the operation count, defined as rows_a * cols_a * cols_b as a measure against which the runtime can be measured.
+
+#Requires runtimes.csv to be present which in turn requires the get_runtimes.sh file to be run
+df = pd.read_csv('runtimes.csv')
+
+
+df[['m', 'k', 'n', 'o']] = df['matrix_size'].str.split(' ', expand=True).astype(int)        #splitting matrix size into m, k, n, o  -  rows_a, cols_a, rows_b, cols_b
+
+
+df['operations'] = df['m'] * df['n'] * df['k']      #computing number of operations as m * n * k i.e., rows_a * cols_a * cols_b
+df['runtime_ms'] = df['runtime'] * 1000             #converting from seconds to milliseconds.
+df = df.sort_values('operations')                   #sorting by operation count.
+
+
+plt.figure(figsize=(12, 8))
+
+#plotting each program separately
+for program in df['program'].unique():
+    program_data = df[df['program'] == program]
+    plt.plot(program_data['operations'], program_data['runtime_ms'], marker='o', label=program)
+
+
+plt.xlabel('Number of Operations (m × n × k)')
+plt.ylabel('Runtime (milliseconds)')
+plt.title('Matrix Multiplication Runtime vs Operations')
+plt.xscale('log')            # operations on log scale
+plt.yscale('linear')          # runtime on normal linear scale
+
+
+plt.grid(True, which='both', linestyle='--', linewidth=0.5)
+plt.legend()
+plt.tight_layout()
+plt.show()
