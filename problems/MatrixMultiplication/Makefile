@@ -18,3 +18,6 @@ functional_mat_mul: mat_mul.ml
 
 imp_mat_mul: mat_mul.cpp
 	g++ -o imp_mat_mul mat_mul.cpp
+
+clean:
+	rm *.txt imp_mat_mul functional_mat_mul *.cmi *.cmo *.cmx *.o generate_matrices
