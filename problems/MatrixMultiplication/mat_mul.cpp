@@ -157,6 +157,7 @@ int main(int argc, char *argv[])
 	else if(strcmp(argv[1], "seq_opt")==0)
 	{
 		result = matrix_mul_seq_opt(a,b);
+		filename="imp_seq_opt.txt";
 	}
 	else if(strcmp(argv[1], "par")==0)
 	{
