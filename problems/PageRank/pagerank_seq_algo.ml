@@ -106,3 +106,8 @@ let () =
         print_actors_states 0 actors;
 
         Lwt_main.run (loop 5 actors)
+
+(* Before running ensure that you've downloaded the Lwt package and the lwt stream package and everything. The run instructions are as follows:
+        ocamlfind ocamlopt -linkpkg -package lwt_ppx,lwt.unix tmp4.ml -o tmp4
+        ./tmp4
+*)
