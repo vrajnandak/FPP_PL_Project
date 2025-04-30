@@ -54,8 +54,8 @@ let () =
   (* CORRECT CODE *)
   open Domainslib
 
-  let width = 800
-  let height = 600
+  let width = 1600
+  let height = 1200
   let zoom = 300.0
   let max_iter = 1000
   
@@ -64,8 +64,10 @@ let () =
     let rec loop zx zy i =
       if i >= max_iter then i
       else
-        let zx2 = zx *. zx and zy2 = zy *. zy in
-        if zx2 +. zy2 > 4.0 then i
+        let zx2 = zx *. zx in
+        let zy2 = zy *. zy in
+        let sum = zx2 +. zy2 in
+        if sum > 4.0 then i        
         else loop (zx2 -. zy2 +. x) (2.0 *. zx *. zy +. y) (i + 1)
     in
     loop 0.0 0.0 0
@@ -80,17 +82,21 @@ let () =
           mandelbrot_iter x y))
     )
   
-  let () =
+    let () =
     let pool = Task.setup_pool ~num_domains:4 () in
+    let t0 = Unix.gettimeofday () in
     let output = Task.run pool (fun () ->
       Array.init height (fun row ->
         Task.async pool (fun () -> compute_row row)
       )
       |> Array.map (Task.await pool)
     ) in
+    let t1 = Unix.gettimeofday () in
     Task.teardown_pool pool;
   
-    (* Persistent structure: immutable array-of-arrays *)
+    Printf.printf "Computation Time: %.4f seconds\n" (t1 -. t0);
+  
+    (* Now write output *)
     let oc = open_out "mandelbrot_output.csv" in
     Array.iter (fun row ->
       Array.iteri (fun i iter ->
@@ -98,7 +104,9 @@ let () =
       ) row
     ) output;
     close_out oc;
+  
     print_endline "Parallel OCaml Mandelbrot set written to mandelbrot_output.csv"
+  
 
 
 

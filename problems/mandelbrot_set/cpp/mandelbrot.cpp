@@ -5,9 +5,10 @@
 #include <future>
 #include <thread>
 #include <functional>
+#include <chrono> 
 
-const int WIDTH = 800;
-const int HEIGHT = 600;
+const int WIDTH = 1600;
+const int HEIGHT = 1200;
 const double ZOOM = 300.0;
 const int MAX_ITER = 1000;
 
@@ -34,8 +35,41 @@ std::vector<int> compute_row(int py) {
     return row;
 }
 
+// int main() {
+//     // Step 1: Lazily create lambdas (not executed yet)
+//     std::vector<std::function<std::vector<int>()>> lazy_tasks;
+//     for (int py = 0; py < HEIGHT; ++py) {
+//         lazy_tasks.emplace_back([py]() {
+//             return compute_row(py);
+//         });
+//     }
+
+//     // Step 2: Now execute them in parallel using async
+//     std::vector<std::future<std::vector<int>>> futures;
+//     for (auto& task : lazy_tasks) {
+//         futures.push_back(std::async(std::launch::async, task));
+//     }
+
+//     // Step 3: Gather results
+//     std::vector<std::vector<int>> result(HEIGHT);
+//     for (int py = 0; py < HEIGHT; ++py) {
+//         result[py] = futures[py].get();
+//     }
+
+//     // Step 4: Write to CSV
+//     std::ofstream out("mandelbrot_output.csv");
+//     for (const auto& row : result) {
+//         for (size_t i = 0; i < row.size(); ++i) {
+//             out << row[i] << (i + 1 == row.size() ? "\n" : ",");
+//         }
+//     }
+//     out.close();
+
+//     std::cout << "Parallel Mandelbrot set saved to mandelbrot_output.csv (with lazy evaluation)\n";
+//     return 0;
+// }
+
 int main() {
-    // Step 1: Lazily create lambdas (not executed yet)
     std::vector<std::function<std::vector<int>()>> lazy_tasks;
     for (int py = 0; py < HEIGHT; ++py) {
         lazy_tasks.emplace_back([py]() {
@@ -43,19 +77,24 @@ int main() {
         });
     }
 
-    // Step 2: Now execute them in parallel using async
     std::vector<std::future<std::vector<int>>> futures;
+
+    auto start = std::chrono::high_resolution_clock::now(); // Start timing
+
     for (auto& task : lazy_tasks) {
         futures.push_back(std::async(std::launch::async, task));
     }
 
-    // Step 3: Gather results
     std::vector<std::vector<int>> result(HEIGHT);
     for (int py = 0; py < HEIGHT; ++py) {
         result[py] = futures[py].get();
     }
 
-    // Step 4: Write to CSV
+    auto end = std::chrono::high_resolution_clock::now(); // End timing
+    std::chrono::duration<double> elapsed = end - start;
+    std::cout << "Computation Time: " << elapsed.count() << " seconds\n";
+
+    // Separate CSV writing
     std::ofstream out("mandelbrot_output.csv");
     for (const auto& row : result) {
         for (size_t i = 0; i < row.size(); ++i) {
@@ -64,7 +103,7 @@ int main() {
     }
     out.close();
 
-    std::cout << "Parallel Mandelbrot set saved to mandelbrot_output.csv (with lazy evaluation)\n";
+    std::cout << "Output saved to mandelbrot_output.csv\n";
     return 0;
 }
 
