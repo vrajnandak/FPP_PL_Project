@@ -1,3 +1,6 @@
 (executable
  (name mandelbrot)
- (libraries domainslib))
+ (libraries domainslib)
+ (ocamlopt_flags (:standard -O3 -unsafe))
+ (ocamlc_flags (:standard -unsafe))
+)
