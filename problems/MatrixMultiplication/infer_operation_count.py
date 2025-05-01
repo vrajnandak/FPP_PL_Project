@@ -11,6 +11,7 @@ df[['m', 'k', 'n', 'o']] = df['matrix_size'].str.split(' ', expand=True).astype(
 
 
 df['operations'] = df['n']                          #column size of 'a' is our x-axis for the plot.
+#df['operations']= df['o']                          #when the data is plotted with changing column size of 'b'.
 df['runtime_ms'] = df['runtime'] * 1000             #converting from seconds to milliseconds.
 df = df.sort_values('operations')                   #sorting by operation count.
 
