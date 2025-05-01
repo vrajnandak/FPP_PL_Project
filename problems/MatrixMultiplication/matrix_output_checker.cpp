@@ -97,6 +97,7 @@ int main()
 	filenames.push_back("imp_seq.txt");
 	filenames.push_back("imp_par.txt");
 	filenames.push_back("imp_seq_opt.txt");
+	filenames.push_back("imp_par_opt.txt");
 
 	compare_outputs(filenames);
 
