@@ -6,8 +6,11 @@ type person = {
   mutable state: state;
 }
 
+
+(* defining a 2D grid - where the simultion happens *)
 type population = person option array array
 
+(* used for printing later (not really useful) *)
 let state_to_char = function
   | Susceptible -> 'S'
   | Infected -> 'I'
@@ -23,6 +26,8 @@ let print_population population =
     print_newline ()
   ) population
 
+
+(* initialising population with a chosen density (set to 0.7 in main). rand is a random number generator state, using the simulation number as a seed *)
 let initialize_population rows cols density rand =
   Array.init rows (fun _ ->
     Array.init cols (fun _ ->
@@ -30,6 +35,8 @@ let initialize_population rows cols density rand =
     )
   )
 
+
+  
 let shuffle_array arr rand =
   let n = Array.length arr in
   for i = n - 1 downto 1 do
