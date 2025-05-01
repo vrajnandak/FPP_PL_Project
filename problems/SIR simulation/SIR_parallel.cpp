@@ -1,106 +1,220 @@
 #include <iostream>
 #include <vector>
 #include <random>
-#include <chrono>
-#include <omp.h>  // OpenMP
+#include <cmath>
+#include <omp.h>
 
 enum class State { Susceptible, Infected, Recovered };
 
 struct Person {
-    State state = State::Susceptible;
+    State state;
 };
 
-using Population = std::vector<std::vector<Person>>;
+using Population = std::vector<std::vector<Person*>>;
 
-void step(double beta, double gamma, Population& pop, std::mt19937& rng) {
-    int rows = pop.size();
-    int cols = pop[0].size();
-    std::uniform_real_distribution<> dist(0.0, 1.0);
+void printPopulation(const Population& pop) {
+    for (const auto& row : pop) {
+        for (const auto* person : row) {
+            if (person) {
+                switch (person->state) {
+                    case State::Susceptible: std::cout << "S "; break;
+                    case State::Infected: std::cout << "I "; break;
+                    case State::Recovered: std::cout << "R "; break;
+                }
+            } else {
+                std::cout << ". ";
+            }
+        }
+        std::cout << "\n";
+    }
+    std::cout << "\n";
+}
 
-    Population next_pop = pop; // Copy for updating in parallel safely
+Population initializePopulation(int rows, int cols, float density) {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_real_distribution<> dis(0.0, 1.0);
 
-#pragma omp parallel for collapse(2)
+    Population pop(rows, std::vector<Person*>(cols, nullptr));
+    
     for (int i = 0; i < rows; ++i) {
         for (int j = 0; j < cols; ++j) {
-            auto& person = pop[i][j];
-            if (person.state == State::Susceptible) {
-                int infected_neighbors = 0;
-                for (int di = -1; di <= 1; ++di) {
-                    for (int dj = -1; dj <= 1; ++dj) {
-                        if (di == 0 && dj == 0) continue;
-                        int ni = i + di;
-                        int nj = j + dj;
-                        if (ni >= 0 && ni < rows && nj >= 0 && nj < cols) {
-                            if (pop[ni][nj].state == State::Infected) {
-                                infected_neighbors++;
-                            }
-                        }
-                    }
-                }
-                double prob = 1.0 - pow(1.0 - beta, infected_neighbors);
-                if (dist(rng) < prob) {
-                    next_pop[i][j].state = State::Infected;
-                }
-            } else if (person.state == State::Infected) {
-                if (dist(rng) < gamma) {
-                    next_pop[i][j].state = State::Recovered;
+            if (dis(gen) < density) {
+                pop[i][j] = new Person{State::Susceptible};
+            }
+        }
+    }
+    return pop;
+}
+
+void movePopulation(Population& pop, float moveProb = 0.5) {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_real_distribution<> dis(0.0, 1.0);
+    std::uniform_int_distribution<> dir(0, 3);
+    
+    int rows = pop.size();
+    if (rows == 0) return;
+    int cols = pop[0].size();
+    
+    // Directions: right, down, left, up
+    const int directions[4][2] = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
+    
+    // Create a copy for reading while we modify the original
+    Population newPop = pop;
+    
+    for (int i = 0; i < rows; ++i) {
+        for (int j = 0; j < cols; ++j) {
+            if (pop[i][j] && dis(gen) < moveProb) {
+                int d = dir(gen);
+                int ni = i + directions[d][0];
+                int nj = j + directions[d][1];
+                
+                if (ni >= 0 && ni < rows && nj >= 0 && nj < cols && !newPop[ni][nj]) {
+                    newPop[ni][nj] = pop[i][j];
+                    newPop[i][j] = nullptr;
                 }
             }
         }
     }
-
-    pop = next_pop; // Update
+    
+    pop = std::move(newPop);
 }
 
-int simulate(double beta, double gamma, int rows, int cols, int steps, unsigned int seed) {
-    Population pop(rows, std::vector<Person>(cols));
-    pop[rows/2][cols/2].state = State::Infected;
-    std::mt19937 rng(seed);
-
-    for (int step_num = 0; step_num < steps; ++step_num) {
-        step(beta, gamma, pop, rng);
-    }
-
-    int infected = 0;
-    for (const auto& row : pop) {
-        for (const auto& p : row) {
-            if (p.state == State::Infected) infected++;
+Population step(float beta, float gamma, const Population& pop) {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_real_distribution<> dis(0.0, 1.0);
+    
+    int rows = pop.size();
+    if (rows == 0) return {};
+    int cols = pop[0].size();
+    
+    // Create new population with copied states
+    Population newPop(rows, std::vector<Person*>(cols, nullptr));
+    for (int i = 0; i < rows; ++i) {
+        for (int j = 0; j < cols; ++j) {
+            if (pop[i][j]) {
+                newPop[i][j] = new Person{pop[i][j]->state};
+            }
         }
     }
-    return infected;
+    
+    for (int i = 0; i < rows; ++i) {
+        for (int j = 0; j < cols; ++j) {
+            if (!pop[i][j]) continue;
+            
+            switch (pop[i][j]->state) {
+                case State::Susceptible: {
+                    int infectedNeighbors = 0;
+                    for (int di = -1; di <= 1; ++di) {
+                        for (int dj = -1; dj <= 1; ++dj) {
+                            if (di == 0 && dj == 0) continue;
+                            int ni = i + di;
+                            int nj = j + dj;
+                            if (ni >= 0 && ni < rows && nj >= 0 && nj < cols && 
+                                pop[ni][nj] && pop[ni][nj]->state == State::Infected) {
+                                infectedNeighbors++;
+                            }
+                        }
+                    }
+                    float prob = 1.0 - std::pow(1.0 - beta, infectedNeighbors);
+                    if (dis(gen) < prob) {
+                        newPop[i][j]->state = State::Infected;
+                    }
+                    break;
+                }
+                case State::Infected:
+                    if (dis(gen) < gamma) {
+                        newPop[i][j]->state = State::Recovered;
+                    }
+                    break;
+                case State::Recovered:
+                    // No change
+                    break;
+            }
+        }
+    }
+    
+    // printPopulation(newPop);
+    return newPop;
+}
+
+int simulate(float beta, float gamma, int rows, int cols, int steps, float density) {
+    auto pop = initializePopulation(rows, cols, density);
+    
+    // Patient zero
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> rowDist(0, rows-1);
+    std::uniform_int_distribution<> colDist(0, cols-1);
+    
+    while (true) {
+        int i = rowDist(gen);
+        int j = colDist(gen);
+        if (pop[i][j]) {
+            pop[i][j]->state = State::Infected;
+            break;
+        }
+    }
+    
+    for (int s = 0; s < steps; ++s) {
+        auto updated = step(beta, gamma, pop);
+        movePopulation(updated);
+        pop = std::move(updated);
+    }
+    
+    int infectedCount = 0;
+    for (const auto& row : pop) {
+        for (const auto* person : row) {
+            if (person && person->state == State::Infected) {
+                infectedCount++;
+            }
+        }
+    }
+    
+    // Clean up memory
+    for (auto& row : pop) {
+        for (auto* person : row) {
+            delete person;
+        }
+    }
+    
+    return infectedCount;
 }
 
 int main() {
-    const int runs = 1000;
-    const double beta = 0.2;
-    const double gamma = 0.1;
+    const int runs = 100;
+    const float beta = 0.2f;
+    const float gamma = 0.05f;
     const int rows = 50;
     const int cols = 50;
     const int steps = 50;
-
+    const float density = 0.7f;
+    
+    double t1 = omp_get_wtime();
+    
     std::vector<int> infections(runs);
 
-    auto start = std::chrono::high_resolution_clock::now();
-
-#pragma omp parallel for
+    #pragma omp parallel for
     for (int i = 0; i < runs; ++i) {
-        unsigned int seed = i + time(0);  // Different seed per thread
-        infections[i] = simulate(beta, gamma, rows, cols, steps, seed);
+        infections[i] = simulate(beta, gamma, rows, cols, steps, density);
     }
-
-    auto end = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> diff = end - start;
-
-    double avg = 0.0;
-    for (auto inf : infections) avg += inf;
+    
+    double t2 = omp_get_wtime();
+    
+    for (int i = 0; i < runs; ++i) {
+        std::cout << "Simulation " << (i+1) << ": " << infections[i] << " infections\n";
+    }
+    
+    float avg = 0.0f;
+    for (int count : infections) {
+        avg += count;
+    }
     avg /= runs;
-
-    // for (int i = 0; i < runs; ++i) {
-    //     std::cout << "Simulation " << i+1 << ": " << infections[i] << " infections\n";
-    // }
-
+    
+    std::cout << "\nParallel: Time taken = " << (t2 - t1) << " seconds\n";
     std::cout << "Average infections at end of simulation: " << avg << "\n";
-    std::cout << "Time taken: " << diff.count() << " seconds\n";
-
+    
     return 0;
 }
