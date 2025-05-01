@@ -6,7 +6,8 @@
 #include <numeric> // for std::iota (optional)
 #include <algorithm> // for std::min
 #include <stdexcept> // for std::runtime_error
-#include <chrono>    // For timing (optional)
+#include <chrono>    // For timing 
+#include <random> 
 
 // Helper function to compute the cost for a single entry m[i][j]
 // It reads previously computed values from the shared 'm' table.
@@ -145,45 +146,6 @@ int matrix_chain_order_seq(const std::vector<int>& p) {
     }
     return m[1][n];
 }
-
-// int main() {
-//     std::vector<int> p = {30, 35, 15, 5, 10, 20, 25}; // Example dimensions
-
-//     std::cout << "Dimensions: ";
-//     for (size_t i = 0; i < p.size(); ++i) {
-//         std::cout << p[i] << (i == p.size() - 1 ? "" : " x ");
-//     }
-//     std::cout << std::endl;
-
-//     try {
-//         // Time sequential version (optional)
-//         auto start_seq = std::chrono::high_resolution_clock::now();
-//         int cost_seq = matrix_chain_order_seq(p);
-//         auto end_seq = std::chrono::high_resolution_clock::now();
-//         std::chrono::duration<double, std::milli> duration_seq = end_seq - start_seq;
-//         std::cout << "Sequential Min Cost: " << cost_seq << " (took " << duration_seq.count() << " ms)" << std::endl;
-
-
-//         // Time parallel version
-//         auto start_async = std::chrono::high_resolution_clock::now();
-//         int cost_async = matrix_chain_order_async(p);
-//         auto end_async = std::chrono::high_resolution_clock::now();
-//         std::chrono::duration<double, std::milli> duration_async = end_async - start_async;
-//         std::cout << "Async Min Cost:      " << cost_async << " (took " << duration_async.count() << " ms)" << std::endl;
-
-//         if(cost_seq != cost_async) {
-//             std::cerr << "Warning: Sequential and Async results differ!" << std::endl;
-//         }
-
-//     } catch (const std::exception& e) {
-//         std::cerr << "An error occurred: " << e.what() << std::endl;
-//         return 1;
-//     }
-
-//     return 0;
-// }
-
-#include <random> // Include this at the top with other headers!
 
 int main() {
     const int num_matrices = 200; // You can increase this to 500, 1000, etc.
