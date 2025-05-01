@@ -4,6 +4,12 @@ The project focuses on leveraging functional programming concepts such as partia
 
 Note: All implementations require OCaml v5.0.0
 
+# Matrix Multiplication, PageRank
+Run the following command after changing to the appropriate directory to see the output.
+bash
+'''
+  make
+'''
 
 # Parallel Word Count Implementations
 ## Implementations
