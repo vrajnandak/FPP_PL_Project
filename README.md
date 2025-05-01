@@ -109,10 +109,10 @@ make ocaml_seq
 
 # C++ Parallel
 make cpp_parallel
-```
 
 # Build all
 make all
 
 # Benchmark
 make benchmark
+```
