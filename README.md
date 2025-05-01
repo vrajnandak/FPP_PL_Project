@@ -112,8 +112,10 @@ hyperfine --warmup 3 --min-runs 20 './_build/default/problems/matrixChain/ocaml/
 
 # Matrix Multiplication, PageRank
 Run the following command after changing to the appropriate directory to see the output.
+
+```
 bash
-'''
-  make
-'''
+
+make all
+```
 
