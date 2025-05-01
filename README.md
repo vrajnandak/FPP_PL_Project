@@ -116,6 +116,6 @@ Run the following command after changing to the appropriate directory to see the
 ```
 bash
 
-make all
+make
 ```
 
