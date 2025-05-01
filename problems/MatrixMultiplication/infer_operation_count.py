@@ -1,7 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-#The runtime data obtained is used in order to see how the runtimes change with matrix sizes. For this, we consider the operation count, defined as rows_a * cols_a * cols_b as a measure against which the runtime can be measured.
+#The runtime data obtained is used in order to see how the runtimes change with matrix sizes. For this, we consider the number of columns of 'A' as a measure against which the runtime can be measured.
 
 #Requires runtimes.csv to be present which in turn requires the get_runtimes.sh file to be run
 df = pd.read_csv('runtimes.csv')
