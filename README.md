@@ -4,6 +4,28 @@ The project focuses on leveraging functional programming concepts such as partia
 
 Note: All implementations require OCaml v5.0.0
 
+# MandelBrot 
+## Build Ocaml 
+dune build problems/mandelbrot_set/ocaml/mandelbrot.exe
+## Make mandelbrot set
+dune exec problems/mandelbrot_set/ocaml/mandelbrot.exe
+## Build C++ 
+g++ -O3 problems/mandelbrot_set/cpp/mandelbrot.cpp -o problems/mandelbrot_set/cpp/mandelbrot_cpp
+## Make mandelbrot set
+./problems/mandelbrot_set/cpp/mandelbrot_cpp
+## Benchmark
+hyperfine './_build/default/problems/mandelbrot_set/ocaml/mandelbrot.exe' './problems/mandelbrot_set/cpp/mandelbrot_cpp'
+
+
+# Matrix Chain
+## Build Ocaml 
+dune build problems/matrixChain/ocaml/matrix_chain.exe
+## Build C++
+g++ -O3 problems/matrixChain/cpp/matrix_chain.cpp -o problems/matrixChain/cpp/matrix_chain_cpp
+## Benchmark
+hyperfine --warmup 3 --min-runs 20 './_build/default/problems/matrixChain/ocaml/matrix_chain.exe' './problems/matrixChain/cpp/matrix_chain_cpp'
+
+
 # Matrix Multiplication, PageRank
 Run the following command after changing to the appropriate directory to see the output.
 bash
@@ -18,7 +40,9 @@ bash
 - parallel_WC.cpp: C++ OpenMP version
 
 ## Compilation
+```
 bash
+
 # OCaml MPI
 make mpi # to run executable independently: mpirun --bind-to core --map-by core -n 4 ./ocaml_MPI_WC
 
@@ -33,6 +57,7 @@ make all
 
 # Build all, and then benchmark using hyperfine
 make benchmark
+```
 
 
 # Parallel SIR Model Simulations
@@ -44,7 +69,9 @@ make benchmark
 - SIR_parallel_simple.cpp: C++ OpenMP - simple implementation without movement
 
 ## Build
+```
 bash
+
 # OCaml with Parmap
 make parmap
 make parmap_simple
@@ -58,6 +85,7 @@ make all
 
 # Benchmark
 make benchmark
+```
 
 
 
@@ -70,7 +98,9 @@ make benchmark
 - FFT_seq.cpp: C++ sequential
 
 ## Compilation
+```
 bash
+
 # OCaml Parallel
 make ocaml_parallel
 
@@ -79,6 +109,7 @@ make ocaml_seq
 
 # C++ Parallel
 make cpp_parallel
+```
 
 # Build all
 make all
