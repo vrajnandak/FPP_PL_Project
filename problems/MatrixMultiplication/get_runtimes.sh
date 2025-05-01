@@ -3,17 +3,14 @@
 echo "matrix_size,program,runtime" >> runtimes.csv
 
 matrix_sizes=(
-	"100 300 300 100"
-	"200 600 600 200"
-	"300 900 900 300"
-	"400 1200 1200 400"
-	"500 1500 1500 500"
-	"640 1800 1800 640"
-	"800 2000 2000 800"
-	"1000 2500 2500 1000"
-	"1200 3000 3000 1200"
-	"1500 3500 3500 1500"
+	"640 100 100 640"
+	"640 200 200 640"
+	"640 500 500 640"
+	"640 1000 1000 640"
+	"640 1500 1500 640"
+	"640 2000 2000 640"
 )
+
 
 programs=(
 	"./functional_mat_mul seq no"
@@ -23,11 +20,14 @@ programs=(
 	"./imp_mat_mul seq no"
 	"./imp_mat_mul seq_opt no"
 	"./imp_mat_mul par no"
+	"./imp_mat_mul par_opt no"
 )
 
 for size in "${matrix_sizes[@]}"
 do
 	echo "Generating matrices for size: $size"
+	./generate_matrices $size
+
 	size_str=$(echo $size | tr ' ' '_')
 
 	for cmd in "${programs[@]}"
