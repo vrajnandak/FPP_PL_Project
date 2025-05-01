@@ -1,18 +1,17 @@
-Process 1 File Read     : 0.000000 seconds
-Process 2 File Read     : 0.000000 seconds
-Process 3 File Read     : 0.000000 seconds
-Process 0 File Read     : 0.070196 seconds
-Process 0 Broadcast     : 0.022685 seconds
-Process 0 Split         : 0.000705 seconds
-Process 1 Broadcast     : 0.102943 seconds
-Process 3 Broadcast     : 0.103045 seconds
-Process 2 Broadcast     : 0.103245 seconds
-Process 1 Split         : 0.002688 seconds
-Process 3 Split         : 0.002849 seconds
-Process 2 Split         : 0.003522 seconds
-Process 0 Computation Time  : 0.018055 seconds
-Process 1 Computation Time  : 0.018194 seconds
-Process 3 Computation Time  : 0.018209 seconds
-Process 2 Computation Time  : 0.018122 seconds
-Process 0 Communication Time: 0.044969 seconds
-Process 0 Execution Time: 0.157156 seconds
+Process 0 File Read     : 0.010446 seconds
+Process 0 Broadcast     : 0.004071 seconds
+Process 0 Split         : 0.000050 seconds
+Process 1 Broadcast     : 0.016540 seconds
+Process 2 Broadcast     : 0.016534 seconds
+Process 3 Broadcast     : 0.017098 seconds
+Process 0 Computation Time  : 0.002733 seconds
+Process 1 Split         : 0.000381 seconds
+Process 2 Split         : 0.000364 seconds
+Process 3 Split         : 0.000598 seconds
+Process 1 Computation Time  : 0.001745 seconds
+Process 2 Computation Time  : 0.001988 seconds
+Process 3 Computation Time  : 0.002560 seconds
+Process 0 Communication Time: 0.003805 seconds
+
+
+Execution Time: 0.021492 seconds

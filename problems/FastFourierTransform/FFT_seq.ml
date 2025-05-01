@@ -32,10 +32,10 @@ let () =
   let input = Array.make n (1.0, 0.0) in
   let output = Array.make n (0.0, 0.0) in
 
-  let t0 = Unix.gettimeofday () in
+  (* let t0 = Unix.gettimeofday () in *)
 
   fft input output 0 n 1;
 
-  let t1 = Unix.gettimeofday () in
+  (* let t1 = Unix.gettimeofday () in *)
 
-  Printf.printf "Sequential FFT done in: %.6f seconds\n%!" (t1 -. t0)
+  (* Printf.printf "Sequential FFT done in: %.6f seconds\n%!" (t1 -. t0) *)
