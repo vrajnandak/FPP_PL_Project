@@ -35,11 +35,9 @@ let read_file filename =
 let () =
   let rank = Mpi.comm_rank Mpi.comm_world in
   let size = Mpi.comm_size Mpi.comm_world in
+  (* let start_time = Unix.gettimeofday () in *)
 
-  let start_time = Unix.gettimeofday () in
-
-  let file_read_start = Unix.gettimeofday () in
-
+  (* let file_read_start = Unix.gettimeofday () in *)
   let all_words =
     if rank = 0 then
       let text = read_file "input.txt" in
@@ -47,38 +45,34 @@ let () =
     else
       [||]
   in
+  (* let file_read_end = Unix.gettimeofday () in *)
 
-  let file_read_end = Unix.gettimeofday () in
+  (* Printf.printf "Process %d File Read     : %.6f seconds\n%!" rank (file_read_end -. file_read_start); *)
 
-  Printf.printf "Process %d File Read     : %.6f seconds\n%!" rank (file_read_end -. file_read_start);
-
-  let bcast_start = Unix.gettimeofday () in
+  (* let bcast_start = Unix.gettimeofday () in *)
   let all_words = Mpi.broadcast all_words 0 Mpi.comm_world in
-  let bcast_end = Unix.gettimeofday () in
+  (* let bcast_end = Unix.gettimeofday () in *)
 
-  Printf.printf "Process %d Broadcast     : %.6f seconds\n%!" rank (bcast_end -. bcast_start);
+  (* Printf.printf "Process %d Broadcast     : %.6f seconds\n%!" rank (bcast_end -. bcast_start); *)
 
-  let split_start = Unix.gettimeofday () in
-
+  (* let split_start = Unix.gettimeofday () in *)
   let total_words = Array.length all_words in
   let words_per_proc = total_words / size in
   let start_index = rank * words_per_proc in
   let end_index = if rank = size - 1 then total_words else (rank + 1) * words_per_proc in
   let chunk_size = end_index - start_index in
   let chunk = Array.sub all_words start_index chunk_size in
-  
-  let split_end = Unix.gettimeofday () in
-  Printf.printf "Process %d Split         : %.6f seconds\n%!" rank (split_end -. split_start);
+  (* let split_end = Unix.gettimeofday () in *)
+  (* Printf.printf "Process %d Split         : %.6f seconds\n%!" rank (split_end -. split_start); *)
 
-
-  let computation_start_time = Unix.gettimeofday () in
+  (* let computation_start_time = Unix.gettimeofday () in *)
   let local_counts = count_words_array chunk in
-  let computation_end_time = Unix.gettimeofday () in
-  let computation_time = computation_end_time -. computation_start_time in
+  (* let computation_end_time = Unix.gettimeofday () in *)
+  (* let computation_time = computation_end_time -. computation_start_time in *)
 
-  Printf.printf "Process %d Computation Time  : %.6f seconds\n%!" rank computation_time;
+  (* Printf.printf "Process %d Computation Time  : %.6f seconds\n%!" rank computation_time; *)
 
-  let communication_start_time = Unix.gettimeofday () in
+  (* let communication_start_time = Unix.gettimeofday () in *)
 
   if rank <> 0 then
     Mpi.send (Hashtbl.to_seq local_counts |> Array.of_seq) 0 0 Mpi.comm_world
@@ -90,10 +84,17 @@ let () =
       aggregate_counts partial_counts master_counts
     done;
 
-    let communication_end_time = Unix.gettimeofday () in
-    let communication_time = communication_end_time -. communication_start_time in
-    Printf.printf "Process %d Communication Time: %.6f seconds\n%!" rank communication_time;
+    (* let communication_end_time = Unix.gettimeofday () in *)
+    (* let communication_time = communication_end_time -. communication_start_time in *)
+    (* Printf.printf "Process %d Communication Time: %.6f seconds\n%!" rank communication_time; *)
 
-    let end_time = Unix.gettimeofday () in
-    Printf.printf "Process %d Execution Time: %.6f seconds\n%!" rank (end_time -. start_time);
+    Printf.printf "\nFinal Word Count Results:\n";
+    Hashtbl.iter (fun word count ->
+      Printf.printf "%s: %d\n" word count
+    ) master_counts;
+
+        (* Printf.printf "Process %d Execution Time: %.6f seconds\n%!" rank (end_time -. start_time) *)
+        (* let end_time = Unix.gettimeofday () in *)
+
+
   end

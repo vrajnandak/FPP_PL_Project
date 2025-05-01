@@ -1,4 +1,3 @@
-(* open Domainslib *)
 module Task = Domainslib.Task
 
 let pi = 4.0 *. atan 1.0

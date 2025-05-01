@@ -66,6 +66,7 @@ let move_population ?(move_prob = 0.5) population rand =
           )
     | None -> ()
   ) coords;
+  
   population
 
 let step beta gamma population rand =
