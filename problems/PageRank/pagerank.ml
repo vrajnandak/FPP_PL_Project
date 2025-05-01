@@ -4,6 +4,7 @@ open Lwt.Infix
 type actor = {
         id: int;                                                        (* corresponds to node id in graph *)
         mutable state : float;                                          (* corresponds to state of node *)
+        mutable prev_state : float;                                     (* for checking stabilisation of graph *)
         mutable send_tos : ((float option -> unit) * float) list;       (* the message channels to which the actor can push values *)
         mutable recv_froms : float Lwt_stream.t list;                   (* the message channels from which actor gets values *)
 }
@@ -19,6 +20,7 @@ let send_state actor =
 (* function for an actor to read state information values from all of it's nodes directed to it *)
 let receive_and_update actor =
         let waits = List.map Lwt_stream.next actor.recv_froms in
+        actor.state <- 0.;
         Lwt.all waits >|= fun xs ->
                 let total=List.fold_left ( +. ) 0.0 xs in
                 actor.state <- actor.state +. total
@@ -92,16 +94,31 @@ let print_adj_list adj_out =
 
 
 (* function to run the page rank algorithm *)
-let rec loop rounds actors =
+let rec loop rounds threshold actors=
         if rounds = 0 then Lwt.return_unit
         else
                 let%lwt () = Lwt_list.iter_p send_state actors in
                 let%lwt () = Lwt_list.iter_p receive_and_update actors in
                 List.iter (fun actor ->
-                        Printf.printf "In loop %d, Actor %d state: %.4f\n" (6 - rounds) actor.id actor.state
+                        Printf.printf "In loop %d, Actor %d state: %.4f\n" (51 - rounds) actor.id actor.state
                 ) actors;
                 Printf.printf "----------------------------------\n";
-                loop (rounds - 1) actors
+
+                (* comparing the prev and curr states of actors to check for stability *)
+                let count_non_converged_actors actors threshold = List.fold_left (fun acc actor ->
+                        let diff = abs_float (actor.state -. actor.prev_state) in
+                        actor.prev_state <- actor.state;
+                        if diff <= threshold then acc else (acc + 1)
+                ) 0 actors
+                in
+                let count = count_non_converged_actors actors threshold in
+                if count = 0 then
+                        begin
+                                Printf.printf "Actors have converged\n";
+                                Lwt.return_unit
+                        end
+                else 
+                        loop (rounds - 1) threshold actors
 
 (* Main entry loop *)
 let () =
@@ -114,9 +131,11 @@ let () =
         let streams_and_pushes = Array.init n_nodes (fun _ -> Lwt_stream.create ()) in
         let actors =
                 Array.init n_nodes (fun i ->
+                        let random_state = Random.float 10. in
                         {
                                 id=i;
-                                state=Random.float 10.;
+                                state=random_state;
+                                prev_state = random_state;
                                 send_tos=[];
                                 recv_froms=[];
                         }
@@ -134,9 +153,10 @@ let () =
 
         (* printing the initial states of the actors *)
         Array.iter (fun actor ->
-                Printf.printf "Initial: Actor %d state = %.4f\n" actor.id actor.state
+                Printf.printf "Initial: Actor %d state = %.4f prev_state = %.4f\n" actor.id actor.state actor.prev_state
         ) actors;
         Printf.printf "================================\n";
 
         let actors_lst = Array.to_list actors in
-        Lwt_main.run (loop 5 actors_lst)
+        let threshold = 0.5 in
+        Lwt_main.run (loop 50 threshold actors_lst)
