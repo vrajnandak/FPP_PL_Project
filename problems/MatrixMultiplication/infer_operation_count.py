@@ -10,7 +10,7 @@ df = pd.read_csv('runtimes.csv')
 df[['m', 'k', 'n', 'o']] = df['matrix_size'].str.split(' ', expand=True).astype(int)        #splitting matrix size into m, k, n, o  -  rows_a, cols_a, rows_b, cols_b
 
 
-df['operations'] = df['m'] * df['n'] * df['k']      #computing number of operations as m * n * k i.e., rows_a * cols_a * cols_b
+df['operations'] = df['n']                          #column size of 'a' is our x-axis for the plot.
 df['runtime_ms'] = df['runtime'] * 1000             #converting from seconds to milliseconds.
 df = df.sort_values('operations')                   #sorting by operation count.
 
@@ -23,12 +23,11 @@ for program in df['program'].unique():
     plt.plot(program_data['operations'], program_data['runtime_ms'], marker='o', label=program)
 
 
-plt.xlabel('Number of Operations (m × n × k)')
+plt.xlabel('Number of Columns')
 plt.ylabel('Runtime (milliseconds)')
 plt.title('Matrix Multiplication Runtime vs Operations')
-plt.xscale('log')            # operations on log scale
-plt.yscale('linear')          # runtime on normal linear scale
-
+plt.xscale('linear')          
+plt.yscale('linear')          
 
 plt.grid(True, which='both', linestyle='--', linewidth=0.5)
 plt.legend()
