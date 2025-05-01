@@ -136,6 +136,48 @@ vector<vector<int>> matrix_mult_parallel(vector<vector<int>> &a, vector<vector<i
 	return result;
 }
 
+//////////////////////////////////// Parallelised matrix multiplication - using b transpose + parallelism ///////////////////////////////////////
+vector<vector<int>> transposeMatrix(const vector<vector<int>> &matrix)
+{
+	int rows=matrix.size();
+	int cols=matrix[0].size();
+	vector<vector<int>> transposed(cols,vector<int>(rows));
+	for(int i=0;i<rows;i++)
+	{
+		for(int j=0;j<cols;j++)
+		{
+			transposed[j][i]=matrix[i][j];
+		}
+	}
+	return transposed;
+}
+
+vector<vector<int>> matrix_mult_parallel_opt(vector<vector<int>> &a, vector<vector<int>> &b)
+{
+	int rows_a=a.size();
+	int cols_b=b[0].size();
+	int cols_a=a[0].size();
+	auto b_transposed=transposeMatrix(b);
+	vector<vector<int>> result(rows_a, vector<int>(cols_b));
+
+#pragma omp parallel for collapse(2)
+	for(int i=0;i<rows_a;i++)
+	{
+		for(int j=0;j<cols_b;j++)
+		{
+			int sum=0;
+			for(int k=0;k<cols_a;k++)
+			{
+				sum += a[i][k] * b_transposed[j][k];
+			}
+			result[i][j] = sum;
+		}
+	}
+
+	return result;
+}
+
+
 int main(int argc, char *argv[])
 {
 	auto a = read_matrix("matrix_a.txt");
@@ -163,6 +205,11 @@ int main(int argc, char *argv[])
 	{
 		result = matrix_mult_parallel(a,b);
 		filename="imp_par.txt";
+	}
+	else if(strcmp(argv[1], "par_opt")==0)
+	{
+		result = matrix_mult_parallel_opt(a,b);
+		filename="imp_par_opt.txt";
 	}
 	else
 	{
