@@ -17,8 +17,13 @@ run_all_once_with_outputs: generate_matrices checker functional_mat_mul imp_mat_
 	./imp_mat_mul par_opt yes
 	./checker
 
-generate_matrices: matrix_generator.cpp
+detailed_comparision: generate_matrix_exec functional_mat_mul imp_mat_mul
+	./run_bash.sh
+
+generate_matrix_exec: matrix_generator.cpp
 	g++ -o generate_matrices matrix_generator.cpp
+
+generate_matrices: generate_matrix_exec 
 	./generate_matrices 640 1800 1800 640
 
 checker: matrix_output_checker.cpp
@@ -31,4 +36,4 @@ imp_mat_mul: mat_mul.cpp
 	g++ -fopenmp -o imp_mat_mul mat_mul.cpp
 
 clean:
-	rm *.cmi *.cmx *.o matrix_a.txt matrix_b.txt functional_mat_mul imp_mat_mul checker *.json OCaml_mat_mul_seq.txt OCaml_mat_mul_partial_eval.txt OCaml_mat_mul_partial_eval_parallel.txt OCaml_mat_mul_partial_eval_parallel_domainslib.txt generate_matrices imp_par.txt imp_par_opt.txt imp_seq.txt imp_seq_opt.txt
+	rm *.cmi *.cmx *.o matrix_a.txt matrix_b.txt functional_mat_mul imp_mat_mul checker *.json OCaml_mat_mul_seq.txt OCaml_mat_mul_partial_eval.txt OCaml_mat_mul_partial_eval_parallel.txt OCaml_mat_mul_partial_eval_parallel_domainslib.txt generate_matrices imp_par.txt imp_par_opt.txt imp_seq.txt imp_seq_opt.txt runtimes.csv
