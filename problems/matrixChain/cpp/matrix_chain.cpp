@@ -148,7 +148,7 @@ int matrix_chain_order_seq(const std::vector<int>& p) {
 }
 
 int main() {
-    const int num_matrices = 200; // You can increase this to 500, 1000, etc.
+    const int num_matrices = 200; 
     const int min_dim = 5;         // Minimum dimension size
     const int max_dim = 100;       // Maximum dimension size
 
@@ -156,7 +156,7 @@ int main() {
 
     // Initialize random number generator
     std::random_device rd;
-    std::mt19937 gen(rd()); // Mersenne Twister RNG
+    std::mt19937 gen(rd()); 
     std::uniform_int_distribution<> dis(min_dim, max_dim);
 
     for (int i = 0; i <= num_matrices; ++i) {
